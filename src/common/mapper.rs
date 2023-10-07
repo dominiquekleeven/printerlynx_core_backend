@@ -6,6 +6,7 @@ pub fn printfile_to_viewmodel(printfile: PrintFileDbModel) -> PrintFileViewModel
         uuid: printfile.uuid,
         user_uuid: printfile.user_uuid,
         name: printfile.name,
+        size: printfile.size,
         checksum: printfile.checksum,
         file_type: printfile.file_type,
         file_storage_type: printfile.file_storage_type,

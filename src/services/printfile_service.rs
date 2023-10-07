@@ -52,15 +52,18 @@ impl PrintFileService for PrintFileServiceImpl {
         while let Some(field) = multipart_file.next_field().await.unwrap() {
             let filename = &field.file_name().unwrap().to_string();
             let data = &field.bytes().await.unwrap();
+            let filesize = data.len() as i32;
             let filepath = store_file(user_uuid, filename, data).await?;
             let sha256 = format!("{:x}", sha2::Sha256::digest(data));
 
+
+
             info!(
-                "success, filepath: {}, sha256 checksum: {}",
-                filepath, sha256
+                "success, filepath: {}, sha256 checksum: {}, size: {}",
+                filepath, sha256, filesize
             );
             printfile = Some(
-                insert_printfile(self.pool.clone(), user_uuid, filename, &filepath, &sha256)
+                insert_printfile(self.pool.clone(), user_uuid, filename, &filepath, filesize, &sha256)
                     .await?,
             );
         }
@@ -99,6 +102,7 @@ impl PrintFileService for PrintFileServiceImpl {
                 PrintFile::UserUuid,
                 PrintFile::Name,
                 PrintFile::Path,
+                PrintFile::Size,
                 PrintFile::Checksum,
                 PrintFile::FileType,
                 PrintFile::FileStorageType,
@@ -138,6 +142,7 @@ impl PrintFileService for PrintFileServiceImpl {
                 PrintFile::UserUuid,
                 PrintFile::Name,
                 PrintFile::Path,
+                PrintFile::Size,
                 PrintFile::Checksum,
                 PrintFile::FileType,
                 PrintFile::FileStorageType,
@@ -174,6 +179,7 @@ async fn insert_printfile(
     user_uuid: &str,
     filename: &str,
     filepath: &str,
+    filesize: i32,
     sha256: &str,
 ) -> Result<PrintFileDbModel, AppError> {
     let file_storage_type = env::var("FILESTORAGE_TYPE").expect("FILESTORAGE_TYPE must be set!");
@@ -183,6 +189,7 @@ async fn insert_printfile(
         user_uuid: user_uuid.to_string(),
         name: filename.to_string(),
         path: filepath.to_string(),
+        size: filesize.to_owned(),
         checksum: sha256.to_string(),
         file_type: FileType::Gcode.to_string(),
         file_storage_type: file_storage_type.to_string(),
@@ -196,6 +203,7 @@ async fn insert_printfile(
             PrintFile::UserUuid,
             PrintFile::Name,
             PrintFile::Path,
+            PrintFile::Size,
             PrintFile::Checksum,
             PrintFile::FileType,
             PrintFile::FileStorageType,
@@ -206,6 +214,7 @@ async fn insert_printfile(
             printfile_model.user_uuid.to_string().into(),
             printfile_model.name.to_string().into(),
             printfile_model.path.to_string().into(),
+            printfile_model.size.into(),
             printfile_model.checksum.to_string().into(),
             printfile_model.file_type.to_string().into(),
             printfile_model.file_storage_type.to_string().into(),
