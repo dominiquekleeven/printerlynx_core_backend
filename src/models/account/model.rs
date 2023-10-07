@@ -6,6 +6,7 @@ pub enum Account {
     Table,
     Uuid,
     Username,
+    Email,
     Password,
     CreatedAt,
     UpdatedAt,
@@ -15,6 +16,7 @@ pub enum Account {
 pub struct AccountDbModel {
     pub uuid: String,
     pub username: String,
+    pub email: String,
     pub password: String,
     pub created_at: String,
     pub updated_at: String,
@@ -24,11 +26,13 @@ pub struct AccountDbModel {
 pub struct AccountViewModel {
     pub uuid: String,
     pub username: String,
+    pub email: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AccountRegisterModel {
     pub username: String,
+    pub email: String,
     pub password: String,
     pub password_confirmation: String,
 }

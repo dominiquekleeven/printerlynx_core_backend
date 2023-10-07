@@ -49,6 +49,13 @@ impl AuthService for AuthServiceImpl {
             });
         }
 
+        if register.email.contains("@") == false {
+            return Err(AppError::Register {
+                message: "Email is not valid".to_string(),
+                status: StatusCode::BAD_REQUEST,
+            });
+        }
+
         if register.password.len() < 6 {
             return Err(AppError::Register {
                 message: "Password must be at least 6 characters long".to_string(),
@@ -61,6 +68,7 @@ impl AuthService for AuthServiceImpl {
         let account = AccountDbModel {
             uuid,
             username: register.username,
+            email: register.email,
             password: generate_hash(register.password),
             created_at: Utc::now().timestamp().to_string(),
             updated_at: Utc::now().timestamp().to_string(),
@@ -110,6 +118,7 @@ async fn insert_user(
         .columns([
             Account::Uuid,
             Account::Username,
+            Account::Email,
             Account::Password,
             Account::CreatedAt,
             Account::UpdatedAt,
@@ -117,6 +126,7 @@ async fn insert_user(
         .values_panic([
             account_model.uuid.to_string().into(),
             account_model.username.to_string().into(),
+            account_model.email.to_string().into(),
             account_model.password.to_string().into(),
             account_model.created_at.to_string().into(),
             account_model.updated_at.to_string().into(),
@@ -146,6 +156,7 @@ async fn get_user_by_username(
         .columns([
             Account::Uuid,
             Account::Username,
+            Account::Email,
             Account::Password,
             Account::CreatedAt,
             Account::UpdatedAt,

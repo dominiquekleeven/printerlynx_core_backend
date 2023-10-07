@@ -38,6 +38,7 @@ async fn get_user_by_uuid(pool: Arc<MySqlPool>, uuid: &str) -> Result<AccountDbM
         .columns([
             Account::Uuid,
             Account::Username,
+            Account::Email,
             Account::Password,
             Account::CreatedAt,
             Account::UpdatedAt,

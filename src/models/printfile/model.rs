@@ -4,7 +4,6 @@ use std::fmt;
 use std::fmt::Display;
 
 #[derive(Iden)]
-#[allow(dead_code)]
 pub enum PrintFile {
     Table,
     Uuid,

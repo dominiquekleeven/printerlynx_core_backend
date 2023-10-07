@@ -18,6 +18,7 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Account::Username).string().not_null())
+                    .col(ColumnDef::new(Account::Email).string().not_null())
                     .col(ColumnDef::new(Account::Password).string().not_null())
                     .col(ColumnDef::new(Account::CreatedAt).string().not_null())
                     .col(ColumnDef::new(Account::UpdatedAt).string().not_null())
@@ -38,6 +39,7 @@ enum Account {
     Table,
     Uuid,
     Username,
+    Email,
     Password,
     CreatedAt,
     UpdatedAt
