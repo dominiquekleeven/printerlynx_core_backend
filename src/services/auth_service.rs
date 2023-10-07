@@ -49,7 +49,7 @@ impl AuthService for AuthServiceImpl {
             });
         }
 
-        if register.email.contains("@") == false {
+        if !register.email.contains('@') {
             return Err(AppError::Register {
                 message: "Email is not valid".to_string(),
                 status: StatusCode::BAD_REQUEST,
