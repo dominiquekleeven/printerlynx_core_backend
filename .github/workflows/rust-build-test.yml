@@ -1,0 +1,45 @@
+name: Test & Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-Dwarnings"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: install dependencies
+      run: |
+        sudo sed -i 's/azure.archive.ubuntu.com/archive.ubuntu.com/' /etc/apt/sources.list
+        sudo apt-get -qq update
+        sudo apt install -qq -y libudev-dev
+
+    - name: install toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        default: true
+        components: clippy, rustfmt
+
+    - name: rust-cache
+      uses: Swatinem/rust-cache@v1     
+
+    - name: run-clippy
+      run: cargo clippy --all-targets --all-features
+
+    - name: run-tests
+      run: cargo test
+
+    - name: run-build
+      run: cargo build
+      

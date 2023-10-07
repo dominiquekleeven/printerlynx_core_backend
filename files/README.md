@@ -1,0 +1,1 @@
+This file only exists to make sure the files directory is created.
