@@ -56,15 +56,20 @@ impl PrintFileService for PrintFileServiceImpl {
             let filepath = store_file(user_uuid, filename, data).await?;
             let sha256 = format!("{:x}", sha2::Sha256::digest(data));
 
-
-
             info!(
                 "success, filepath: {}, sha256 checksum: {}, size: {}",
                 filepath, sha256, filesize
             );
             printfile = Some(
-                insert_printfile(self.pool.clone(), user_uuid, filename, &filepath, filesize, &sha256)
-                    .await?,
+                insert_printfile(
+                    self.pool.clone(),
+                    user_uuid,
+                    filename,
+                    &filepath,
+                    filesize,
+                    &sha256,
+                )
+                .await?,
             );
         }
 
