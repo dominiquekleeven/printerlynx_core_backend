@@ -177,7 +177,6 @@ impl PrintFileService for PrintFileServiceImpl {
 
 //TODO: add checksum duplicate check specific to user
 //TODO: add file name check specific to user (ask for overwrite)
-//TODO: mime type check for gcode files
 
 async fn insert_printfile(
     pool: Arc<Pool<MySql>>,
