@@ -68,3 +68,16 @@ impl Display for FileType {
         write!(f, "{:?}", self)
     }
 }
+
+pub fn printfile_to_viewmodel(printfile: PrintFileDbModel) -> PrintFileViewModel {
+    PrintFileViewModel {
+        uuid: printfile.uuid,
+        user_uuid: printfile.user_uuid,
+        name: printfile.name,
+        size: printfile.size,
+        checksum: printfile.checksum,
+        file_type: printfile.file_type,
+        file_storage_type: printfile.file_storage_type,
+        created_at: printfile.created_at,
+    }
+}

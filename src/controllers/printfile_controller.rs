@@ -7,9 +7,8 @@ use axum::{middleware, Extension, Json, Router};
 use tracing::info;
 
 use crate::common::app_error::AppError;
-use crate::common::mapper::printfile_to_viewmodel;
 use crate::middlewares::auth_middleware;
-use crate::models::printfile_model::PrintFileViewModel;
+use crate::models::printfile_model::{printfile_to_viewmodel, PrintFileViewModel};
 use crate::services::printfile_service::{PrintFileService, PrintFileServiceImpl};
 use crate::AppState;
 

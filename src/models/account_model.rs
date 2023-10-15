@@ -42,3 +42,11 @@ pub struct AccountLoginModel {
     pub username: String,
     pub password: String,
 }
+
+pub fn account_to_viewmodel(account: AccountDbModel) -> AccountViewModel {
+    AccountViewModel {
+        uuid: account.uuid,
+        email: account.email,
+        username: account.username,
+    }
+}

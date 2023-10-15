@@ -1,14 +1,13 @@
 use std::sync::Arc;
 
 use crate::common::app_error::AppError;
-use crate::common::mapper::account_to_viewmodel;
 use axum::extract::State;
 use axum::routing::get;
 use axum::{middleware, Extension, Json, Router};
 use tracing::info;
 
 use crate::middlewares::auth_middleware;
-use crate::models::account_model::AccountViewModel;
+use crate::models::account_model::{account_to_viewmodel, AccountViewModel};
 use crate::services::user_service::{UserService, UserServiceImpl};
 use crate::AppState;
 
