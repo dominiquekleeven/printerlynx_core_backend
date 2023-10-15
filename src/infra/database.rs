@@ -12,6 +12,7 @@ pub async fn get_pool() -> MySqlPool {
 
     if !MySql::database_exists(&path).await.unwrap_or(false) {
         error!("Database does not exist or could not be found");
+        panic!("Database does not exist or could not be found");
     }
 
     let options = MySqlPoolOptions::new()

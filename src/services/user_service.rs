@@ -6,7 +6,7 @@ use sea_query::{Expr, MysqlQueryBuilder, Query};
 use sqlx::{FromRow, MySql, MySqlPool, Pool};
 
 use crate::common::app_error::AppError;
-use crate::models::account::model::{Account, AccountDbModel};
+use crate::models::account_model::{Account, AccountDbModel};
 
 #[async_trait]
 pub trait UserService {

@@ -1,5 +1,5 @@
-use crate::models::account::model::{AccountDbModel, AccountViewModel};
-use crate::models::printfile::model::{PrintFileDbModel, PrintFileViewModel};
+use crate::models::account_model::{AccountDbModel, AccountViewModel};
+use crate::models::printfile_model::{PrintFileDbModel, PrintFileViewModel};
 
 pub fn printfile_to_viewmodel(printfile: PrintFileDbModel) -> PrintFileViewModel {
     PrintFileViewModel {

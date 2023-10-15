@@ -12,7 +12,7 @@ use tracing::{error, info};
 use uuid::Uuid;
 
 use crate::common::app_error::AppError;
-use crate::models::printfile::model::{FileType, PrintFile, PrintFileDbModel};
+use crate::models::printfile_model::{FileType, PrintFile, PrintFileDbModel};
 use crate::services::filestorage_service::store_file;
 
 #[async_trait]

@@ -11,7 +11,7 @@ use uuid::Uuid;
 
 use crate::common::app_error::AppError;
 use crate::common::jwt_token::{generate_token, Claims, JwtToken};
-use crate::models::account::model::{
+use crate::models::account_model::{
     Account, AccountDbModel, AccountLoginModel, AccountRegisterModel,
 };
 
