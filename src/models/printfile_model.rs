@@ -1,7 +1,8 @@
-use sea_query::Iden;
-use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fmt::Display;
+
+use sea_query::Iden;
+use serde::{Deserialize, Serialize};
 
 #[derive(Iden)]
 pub enum PrintFile {
@@ -28,6 +29,23 @@ pub struct PrintFileDbModel {
     pub file_type: String,
     pub file_storage_type: String,
     pub created_at: String,
+}
+
+
+impl PrintFileDbModel {
+    /// Maps the PrintFileDbModel to a PrintFileViewModel
+    pub fn to_viewmodel(&self) -> PrintFileViewModel {
+        PrintFileViewModel {
+            uuid: self.uuid.to_string(),
+            user_uuid: self.user_uuid.to_string(),
+            name: self.name.to_string(),
+            size: self.size.to_owned(),
+            checksum: self.checksum.to_string(),
+            file_type: self.file_type.to_string(),
+            file_storage_type: self.file_storage_type.to_string(),
+            created_at: self.created_at.to_string(),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -69,15 +87,5 @@ impl Display for FileType {
     }
 }
 
-pub fn printfile_to_viewmodel(printfile: PrintFileDbModel) -> PrintFileViewModel {
-    PrintFileViewModel {
-        uuid: printfile.uuid,
-        user_uuid: printfile.user_uuid,
-        name: printfile.name,
-        size: printfile.size,
-        checksum: printfile.checksum,
-        file_type: printfile.file_type,
-        file_storage_type: printfile.file_storage_type,
-        created_at: printfile.created_at,
-    }
-}
+
+
