@@ -22,7 +22,6 @@ pub struct AccountDbModel {
     pub updated_at: String,
 }
 
-
 impl AccountDbModel {
     /// Maps the AccountDbModel to a AccountViewModel
     pub fn to_viewmodel(&self) -> AccountViewModel {
@@ -54,4 +53,3 @@ pub struct AccountLoginModel {
     pub username: String,
     pub password: String,
 }
-

@@ -31,7 +31,6 @@ pub struct PrintFileDbModel {
     pub created_at: String,
 }
 
-
 impl PrintFileDbModel {
     /// Maps the PrintFileDbModel to a PrintFileViewModel
     pub fn to_viewmodel(&self) -> PrintFileViewModel {
@@ -86,6 +85,3 @@ impl Display for FileType {
         write!(f, "{:?}", self)
     }
 }
-
-
-

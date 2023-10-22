@@ -7,7 +7,7 @@ use axum::{middleware, Extension, Json, Router};
 use tracing::info;
 
 use crate::middlewares::auth_middleware;
-use crate::models::account_model::{AccountViewModel};
+use crate::models::account_model::AccountViewModel;
 use crate::services::user_service::{UserService, UserServiceImpl};
 use crate::AppState;
 
