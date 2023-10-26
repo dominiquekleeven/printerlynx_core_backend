@@ -1,3 +1,4 @@
+use crate::models::view_model::ViewModel;
 use sea_query::Iden;
 use serde::{Deserialize, Serialize};
 
@@ -22,9 +23,10 @@ pub struct AccountDbModel {
     pub updated_at: String,
 }
 
-impl AccountDbModel {
+impl ViewModel for AccountDbModel {
+    type Model = AccountViewModel;
     /// Maps the AccountDbModel to a AccountViewModel
-    pub fn to_viewmodel(&self) -> AccountViewModel {
+    fn to_viewmodel(&self) -> Self::Model {
         AccountViewModel {
             uuid: self.uuid.to_string(),
             username: self.username.to_string(),

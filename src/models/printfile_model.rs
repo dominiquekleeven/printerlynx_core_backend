@@ -1,6 +1,7 @@
 use std::fmt;
 use std::fmt::Display;
 
+use crate::models::view_model::ViewModel;
 use sea_query::Iden;
 use serde::{Deserialize, Serialize};
 
@@ -31,9 +32,11 @@ pub struct PrintFileDbModel {
     pub created_at: String,
 }
 
-impl PrintFileDbModel {
+impl ViewModel for PrintFileDbModel {
+    type Model = PrintFileViewModel;
+
     /// Maps the PrintFileDbModel to a PrintFileViewModel
-    pub fn to_viewmodel(&self) -> PrintFileViewModel {
+    fn to_viewmodel(&self) -> Self::Model {
         PrintFileViewModel {
             uuid: self.uuid.to_string(),
             user_uuid: self.user_uuid.to_string(),

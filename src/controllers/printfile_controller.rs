@@ -11,6 +11,7 @@ use crate::middlewares::auth_middleware;
 use crate::models::printfile_model::PrintFileViewModel;
 use crate::services::printfile_service::{PrintFileService, PrintFileServiceImpl};
 use crate::AppState;
+use crate::models::view_model::ViewModel;
 
 pub fn init() -> Router<Arc<AppState>> {
     info!("Ok");
