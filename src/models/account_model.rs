@@ -23,18 +23,6 @@ pub struct AccountDbModel {
     pub updated_at: String,
 }
 
-impl ViewModel for AccountDbModel {
-    type Model = AccountViewModel;
-    /// Maps the AccountDbModel to a AccountViewModel
-    fn to_viewmodel(&self) -> Self::Model {
-        AccountViewModel {
-            uuid: self.uuid.to_string(),
-            username: self.username.to_string(),
-            email: self.email.to_string(),
-        }
-    }
-}
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AccountViewModel {
     pub uuid: String,
@@ -54,4 +42,16 @@ pub struct AccountRegisterModel {
 pub struct AccountLoginModel {
     pub username: String,
     pub password: String,
+}
+
+impl ViewModel for AccountDbModel {
+    type Model = AccountViewModel;
+
+    fn to_viewmodel(&self) -> Self::Model {
+        AccountViewModel {
+            uuid: self.uuid.to_string(),
+            username: self.username.to_string(),
+            email: self.email.to_string(),
+        }
+    }
 }

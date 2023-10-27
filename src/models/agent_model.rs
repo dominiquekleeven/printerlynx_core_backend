@@ -24,6 +24,17 @@ pub struct AgentDbModel {
     pub created_at: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct AgentViewModel {
+    pub uuid: String,
+    pub user_uuid: String,
+    pub name: String,
+    pub token: String,
+    pub ip: String,
+    pub port: i32,
+    pub created_at: String,
+}
+
 impl ViewModel for AgentDbModel {
     type Model = AgentViewModel;
 
@@ -38,15 +49,4 @@ impl ViewModel for AgentDbModel {
             created_at: self.created_at.to_string(),
         }
     }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct AgentViewModel {
-    pub uuid: String,
-    pub user_uuid: String,
-    pub name: String,
-    pub token: String,
-    pub ip: String,
-    pub port: i32,
-    pub created_at: String,
 }
