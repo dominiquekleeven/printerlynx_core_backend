@@ -23,7 +23,20 @@ services:
       RABBITMQ_DEFAULT_PASS: PrinterlynxDev
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+  minio: # MINIO
+    image: minio/minio
+    ports:
+      - "9090:9000"
+      - "9001:9001"
+    restart: always
+    environment:
+      MINIO_ROOT_USER: printerlynx
+      MINIO_ROOT_PASSWORD: PrinterlynxDev
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
 
 volumes:
     mysql-data:
     rabbitmq-data:
+    minio-data:
