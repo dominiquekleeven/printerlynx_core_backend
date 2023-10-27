@@ -72,5 +72,6 @@ async fn delete_by_uuid(
 ) -> Result<Json<bool>, AppError> {
     let printfile_service = PrintFileServiceImpl::new(state.pool.clone());
     let deleted = printfile_service.delete(&user_uuid, &uuid).await?;
+
     Ok(Json(deleted))
 }

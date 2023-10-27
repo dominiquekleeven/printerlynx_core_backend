@@ -24,13 +24,13 @@ pub async fn create(state: Arc<AppState>) -> Router {
 
     let auth_endpoints = auth_controller::init();
     let user_endpoints = user_controller::init();
-    let gcode_endpoints = printfile_controller::init();
+    let printfile_endpoints = printfile_controller::init();
 
     Router::new()
         .route("/health", get(|| async { "OK" }))
         .nest("/api/v1", auth_endpoints)
         .nest("/api/v1", user_endpoints)
-        .nest("/api/v1", gcode_endpoints)
+        .nest("/api/v1", printfile_endpoints)
         .layer(cors)
         .layer(trace_layer)
         .with_state(state)

@@ -30,8 +30,6 @@ pub struct AgentViewModel {
     pub user_uuid: String,
     pub name: String,
     pub token: String,
-    pub ip: String,
-    pub port: i32,
     pub created_at: String,
 }
 
@@ -44,8 +42,6 @@ impl ViewModel for AgentDbModel {
             user_uuid: self.user_uuid.to_string(),
             name: self.name.to_string(),
             token: self.token.to_string(),
-            ip: self.ip.to_string(),
-            port: self.port.to_owned(),
             created_at: self.created_at.to_string(),
         }
     }
