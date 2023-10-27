@@ -6,7 +6,7 @@ use dotenvy::dotenv;
 use sqlx::{MySql, Pool};
 use tracing::info;
 
-use crate::infra::{database, serial};
+use crate::infra::database;
 
 mod common;
 mod controllers;
@@ -67,8 +67,6 @@ pub fn info_system() {
         "System details: os: {}, arch: {}, fam: {}",
         operating_system, architecture, family
     );
-
-    serial::check_serial_connections();
 }
 
 #[allow(dead_code)]
