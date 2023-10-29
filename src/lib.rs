@@ -15,6 +15,7 @@ mod middlewares;
 mod models;
 mod router;
 mod services;
+mod jobs;
 
 #[derive(Clone)]
 pub struct AppState {
