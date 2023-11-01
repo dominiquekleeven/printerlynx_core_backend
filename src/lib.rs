@@ -11,11 +11,11 @@ use crate::infra::database;
 mod common;
 mod controllers;
 mod infra;
+mod jobs;
 mod middlewares;
 mod models;
 mod router;
 mod services;
-mod jobs;
 
 #[derive(Clone)]
 pub struct AppState {

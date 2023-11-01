@@ -29,7 +29,6 @@ pub async fn handle<B>(
     };
 
     // TODO: Technically, we should make sure the user exists, al though its impossible to have a valid token without a user.
-
     info!(
         "finished processing protected request (duration: {}μs)",
         time.elapsed().as_micros()

@@ -42,9 +42,8 @@ pub struct Claims {
 
 #[cfg(test)]
 mod tests {
-    use chrono::Utc;
-
     use super::*;
+    use chrono::Utc;
 
     #[test]
     fn test_generate_token() {
