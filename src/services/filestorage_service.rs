@@ -23,3 +23,18 @@ pub async fn store_file(user_uuid: &str, filename: &str, data: &[u8]) -> Result<
         }
     }
 }
+
+pub async fn retrieve_file(filepath: &str) -> Result<Vec<u8>, AppError> {
+    let file_storage_type = env::var("FILESTORAGE_TYPE").expect("FILESTORAGE_TYPE must be set!");
+
+    match file_storage_type.as_str() {
+        "local" => LocalFileStrategy::retrieve_file(&LocalFileStrategy {}, filepath).await,
+        "s3" => S3FileStrategy::retrieve_file(&S3FileStrategy {}, filepath).await,
+        _ => {
+            error!("unknown file storage type: {}", file_storage_type);
+            Err(AppError::InternalServer {
+                message: "Something went wrong during the file retrieval".to_string(),
+            })
+        }
+    }
+}

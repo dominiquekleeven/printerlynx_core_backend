@@ -20,6 +20,7 @@ pub fn init() -> Router<Arc<AppState>> {
         .route("/files/:uuid", get(get_by_uuid))
         .route("/files/upload", post(upload))
         .route("/files/:uuid", delete(delete_by_uuid))
+        .route("/files/:uuid/download", get(download))
         .route_layer(DefaultBodyLimit::max(1024 * 1024 * 20)) // 20MB
         .route_layer(middleware::from_fn(auth_middleware::handle))
 }
@@ -63,6 +64,17 @@ async fn upload(
     let printfile = printfile.to_viewmodel();
 
     Ok(Json(printfile))
+}
+
+async fn download(
+    State(state): State<Arc<AppState>>,
+    Extension(user_uuid): Extension<String>,
+    Path(uuid): Path<String>,
+) -> Result<Vec<u8>, AppError> {
+    let printfile_service = PrintFileServiceImpl::new(state.pool.clone());
+    let printfile = printfile_service.download(&user_uuid, &uuid).await?;
+
+    Ok(printfile)
 }
 
 async fn delete_by_uuid(

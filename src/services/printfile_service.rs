@@ -13,7 +13,7 @@ use uuid::Uuid;
 
 use crate::common::app_error::AppError;
 use crate::models::printfile_model::{FileType, PrintFile, PrintFileDbModel};
-use crate::services::filestorage_service::store_file;
+use crate::services::filestorage_service::{retrieve_file, store_file};
 
 #[async_trait]
 pub trait PrintFileService {
@@ -29,6 +29,7 @@ pub trait PrintFileService {
         user_uuid: &str,
         file_uuid: &str,
     ) -> Result<PrintFileDbModel, AppError>;
+    async fn download(&self, user_uuid: &str, file_uuid: &str) -> Result<Vec<u8>, AppError>;
 }
 
 pub struct PrintFileServiceImpl {
@@ -172,6 +173,11 @@ impl PrintFileService for PrintFileServiceImpl {
             PrintFileDbModel::from_row(&row).expect("Error converting row to PrintFileDbModel");
 
         Ok(printfile)
+    }
+
+    async fn download(&self, user_uuid: &str, file_uuid: &str) -> Result<Vec<u8>, AppError> {
+        let printfile = self.get_by_uuid(user_uuid, file_uuid).await?;
+        Ok(retrieve_file(&printfile.path).await?)
     }
 }
 
