@@ -31,12 +31,6 @@ pub enum AppError {
     #[error("{message:}")]
     Token { message: String, status: StatusCode },
 
-    #[error("{messages:}")]
-    Gcode {
-        messages: String,
-        status: StatusCode,
-    },
-
     #[error("{message:}")]
     PrintFile { message: String, status: StatusCode },
 
@@ -54,7 +48,6 @@ impl IntoResponse for AppError {
             AppError::Register { status, .. } => status,
             AppError::Login { status, .. } => status,
             AppError::Token { status, .. } => status,
-            AppError::Gcode { status, .. } => status,
             AppError::PrintFile { status, .. } => status,
             AppError::Validation { status, .. } => status,
         };
