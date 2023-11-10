@@ -9,9 +9,7 @@ use uuid::Uuid;
 
 use crate::common::app_error::AppError;
 use crate::common::jwt_token::{generate_token, Claims, JwtToken};
-use crate::models::account_model::{
-    AccountDbModel, AccountLoginModel, AccountRegisterModel,
-};
+use crate::models::account_model::{AccountDbModel, AccountLoginModel, AccountRegisterModel};
 use crate::services::user_service::{UserService, UserServiceImpl};
 
 #[async_trait]
