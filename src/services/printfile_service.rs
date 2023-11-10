@@ -76,9 +76,7 @@ impl PrintFileService for PrintFileServiceImpl {
 
         match printfile {
             Some(printfile) => Ok(printfile),
-            None => Err(AppError::InternalServer {
-                message: "Something went wrong during the file upload".to_string(),
-            }),
+            None => Err(AppError::InternalServer),
         }
     }
 
@@ -94,9 +92,7 @@ impl PrintFileService for PrintFileServiceImpl {
             Ok(_) => Ok(true),
             Err(e) => {
                 error!("Error deleting printfile: {}", e);
-                Err(AppError::InternalServer {
-                    message: "Something went wrong, please try again".to_string(),
-                })
+                Err(AppError::InternalServer)
             }
         }
     }
@@ -238,9 +234,7 @@ async fn insert_printfile(
         Ok(_) => Ok(printfile_model),
         Err(e) => {
             error!("Error inserting printfile: {}", e);
-            Err(AppError::InternalServer {
-                message: "Something went wrong during the file upload".to_string(),
-            })
+            Err(AppError::InternalServer)
         }
     }
 }

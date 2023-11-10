@@ -33,9 +33,7 @@ impl FileStorageStrategy for LocalFileStrategy {
             }
             Err(e) => {
                 error!("error writing file {}: {}", filename, e);
-                Err(AppError::InternalServer {
-                    message: "Something went wrong during the file upload".to_string(),
-                })
+                Err(AppError::InternalServer)
             }
         }
     }

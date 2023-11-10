@@ -19,8 +19,8 @@ pub struct ErrorMessage {
 #[allow(dead_code)]
 #[derive(Error, Debug)]
 pub enum AppError {
-    #[error("{message:}")]
-    InternalServer { message: String },
+    #[error("Something went wrong, please try again")]
+    InternalServer,
 
     #[error("{message:}")]
     Register { message: String, status: StatusCode },

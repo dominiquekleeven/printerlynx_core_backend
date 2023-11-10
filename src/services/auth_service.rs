@@ -61,9 +61,6 @@ impl AuthService for AuthServiceImpl {
         }
 
         let user_service = UserServiceImpl::new(self.pool.clone());
-        user_service
-            .check_if_username_exists(&register.username)
-            .await?;
 
         let uuid = Uuid::new_v4().to_string();
         let account = AccountDbModel {
@@ -75,12 +72,7 @@ impl AuthService for AuthServiceImpl {
             updated_at: Utc::now().timestamp().to_string(),
         };
 
-        if (user_service.insert(&account).await).is_err() {
-            return Err(AppError::Register {
-                message: "Failed to create account, please try again".to_string(),
-                status: StatusCode::INTERNAL_SERVER_ERROR,
-            });
-        }
+        user_service.insert(&account).await?;
 
         let token = generate_token(create_claims(&account.uuid));
         Ok(JwtToken { token })

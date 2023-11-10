@@ -14,7 +14,6 @@ pub trait UserService {
     async fn get_by_uuid(&self, uuid: &str) -> Result<AccountDbModel, AppError>;
     async fn insert(&self, account: &AccountDbModel) -> Result<bool, AppError>;
     async fn get_by_username(&self, username: &str) -> Result<AccountDbModel, AppError>;
-    async fn check_if_username_exists(&self, username: &str) -> Result<bool, AppError>;
 }
 
 pub struct UserServiceImpl {
@@ -83,6 +82,13 @@ impl UserService for UserServiceImpl {
             .to_string(MysqlQueryBuilder)
             .to_owned();
 
+        if !is_username_unique(self.pool.clone(), &account.username).await? {
+            return Err(AppError::User {
+                message: "Username is already taken".to_string(),
+                status: StatusCode::BAD_REQUEST,
+            });
+        }
+
         let pool = self.pool.clone();
         let mut conn = pool.acquire().await.unwrap();
 
@@ -90,10 +96,7 @@ impl UserService for UserServiceImpl {
             Ok(_) => Ok(true),
             Err(e) => {
                 error!("Error creating account: {}", e);
-                Err(AppError::User {
-                    message: "Error creating user".to_string(),
-                    status: StatusCode::INTERNAL_SERVER_ERROR,
-                })
+                Err(AppError::InternalServer)
             }
         }
     }
@@ -128,24 +131,24 @@ impl UserService for UserServiceImpl {
 
         Ok(account)
     }
+}
+async fn is_username_unique(pool: Arc<Pool<MySql>>, username: &str) -> Result<bool, AppError> {
+    let sql = Query::select()
+        .columns([Account::Uuid])
+        .from(Account::Table)
+        .and_where(Expr::col(Account::Username).eq(username))
+        .to_string(MysqlQueryBuilder);
 
-    async fn check_if_username_exists(&self, username: &str) -> Result<bool, AppError> {
-        let sql = Query::select()
-            .columns([Account::Uuid])
-            .from(Account::Table)
-            .and_where(Expr::col(Account::Username).eq(username))
-            .to_string(MysqlQueryBuilder);
-
-        let pool = self.pool.clone();
-        let row = sqlx::query(&sql).fetch_optional(&*pool).await.unwrap();
-
-        if row.is_some() {
-            return Err(AppError::User {
-                message: "Username already exists".to_string(),
-                status: StatusCode::BAD_REQUEST,
-            });
+    let row = match sqlx::query(&sql).fetch_optional(&*pool).await {
+        Ok(row) => row,
+        Err(e) => {
+            error!("Error checking if username is unique: {}", e);
+            return Err(AppError::InternalServer);
         }
+    };
 
-        Ok(true)
+    if row.is_some() {
+        return Ok(false);
     }
+    Ok(true)
 }

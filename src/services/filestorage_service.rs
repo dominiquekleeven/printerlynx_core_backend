@@ -17,9 +17,7 @@ pub async fn store_file(user_uuid: &str, filename: &str, data: &[u8]) -> Result<
         "s3" => S3FileStrategy::write_file(&S3FileStrategy {}, user_uuid, filename, data).await,
         _ => {
             error!("unknown file storage type: {}", file_storage_type);
-            Err(AppError::InternalServer {
-                message: "Something went wrong during the file upload".to_string(),
-            })
+            Err(AppError::InternalServer)
         }
     }
 }
@@ -32,9 +30,7 @@ pub async fn retrieve_file(filepath: &str) -> Result<Vec<u8>, AppError> {
         "s3" => S3FileStrategy::retrieve_file(&S3FileStrategy {}, filepath).await,
         _ => {
             error!("unknown file storage type: {}", file_storage_type);
-            Err(AppError::InternalServer {
-                message: "Something went wrong during the file retrieval".to_string(),
-            })
+            Err(AppError::InternalServer)
         }
     }
 }
