@@ -1,10 +1,10 @@
-use std::env;
-use axum::async_trait;
-use s3::{Bucket, Region};
-use s3::creds::Credentials;
-use tracing::info;
 use crate::common::app_error::AppError;
 use crate::services::strategies::file_storage_strategy::FileStorageStrategy;
+use axum::async_trait;
+use s3::creds::Credentials;
+use s3::{Bucket, Region};
+use std::env;
+use tracing::info;
 
 pub struct S3FileStrategy {}
 

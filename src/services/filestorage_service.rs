@@ -7,7 +7,6 @@ use crate::services::strategies::file_storage_strategy::FileStorageStrategy;
 use crate::services::strategies::local_file_strategy::LocalFileStrategy;
 use crate::services::strategies::s3_file_strategy::S3FileStrategy;
 
-
 pub async fn store_file(user_uuid: &str, filename: &str, data: &[u8]) -> Result<String, AppError> {
     let file_storage_type = env::var("FILESTORAGE_TYPE").expect("FILESTORAGE_TYPE must be set!");
 

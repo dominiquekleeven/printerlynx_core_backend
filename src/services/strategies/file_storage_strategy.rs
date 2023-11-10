@@ -1,4 +1,3 @@
-
 use axum::async_trait;
 
 use crate::common::app_error::AppError;
@@ -13,6 +12,3 @@ pub trait FileStorageStrategy {
     ) -> Result<String, AppError>;
     async fn retrieve_file(&self, filepath: &str) -> Result<Vec<u8>, AppError>;
 }
-
-
-
