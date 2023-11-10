@@ -29,6 +29,9 @@ pub enum AppError {
     Login { message: String, status: StatusCode },
 
     #[error("{message:}")]
+    User { message: String, status: StatusCode },
+
+    #[error("{message:}")]
     Token { message: String, status: StatusCode },
 
     #[error("{message:}")]
@@ -50,6 +53,7 @@ impl IntoResponse for AppError {
             AppError::Token { status, .. } => status,
             AppError::PrintFile { status, .. } => status,
             AppError::Validation { status, .. } => status,
+            AppError::User { status, .. } => status,
         };
 
         let json_body = Json(ErrorMessage {

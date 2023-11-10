@@ -48,9 +48,9 @@ impl UserService for UserServiceImpl {
         let row = sqlx::query(&sql).fetch_optional(&*pool).await.unwrap();
 
         if row.is_none() {
-            return Err(AppError::Token {
-                message: "Invalid token, token has no associated user".to_string(),
-                status: StatusCode::UNAUTHORIZED,
+            return Err(AppError::User {
+                message: "No user found".to_string(),
+                status: StatusCode::NOT_FOUND,
             });
         }
 
@@ -90,8 +90,9 @@ impl UserService for UserServiceImpl {
             Ok(_) => Ok(true),
             Err(e) => {
                 error!("Error creating account: {}", e);
-                Err(AppError::InternalServer {
-                    message: "Error creating account".to_string(),
+                Err(AppError::User {
+                    message: "Error creating user".to_string(),
+                    status: StatusCode::INTERNAL_SERVER_ERROR,
                 })
             }
         }
@@ -116,9 +117,9 @@ impl UserService for UserServiceImpl {
         let row = sqlx::query(&sql).fetch_optional(&*pool).await.unwrap();
 
         if row.is_none() {
-            return Err(AppError::Login {
-                message: "Invalid username or password".to_string(),
-                status: StatusCode::BAD_REQUEST,
+            return Err(AppError::User {
+                message: "User not found".to_string(),
+                status: StatusCode::NOT_FOUND,
             });
         }
 
@@ -139,7 +140,7 @@ impl UserService for UserServiceImpl {
         let row = sqlx::query(&sql).fetch_optional(&*pool).await.unwrap();
 
         if row.is_some() {
-            return Err(AppError::Register {
+            return Err(AppError::User {
                 message: "Username already exists".to_string(),
                 status: StatusCode::BAD_REQUEST,
             });
