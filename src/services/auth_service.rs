@@ -33,28 +33,28 @@ impl AuthService for AuthServiceImpl {
     /// Register a new user and return a JWT token
     async fn register(&self, register: AccountRegisterModel) -> Result<JwtToken, AppError> {
         if register.password != register.password_confirmation {
-            return Err(AppError::Register {
+            return Err(AppError::Auth {
                 message: "Password and password confirmation do not match".to_string(),
                 status: StatusCode::BAD_REQUEST,
             });
         }
 
         if register.username.len() < 3 {
-            return Err(AppError::Register {
+            return Err(AppError::Auth {
                 message: "Username must be at least 3 characters long".to_string(),
                 status: StatusCode::BAD_REQUEST,
             });
         }
 
         if !register.email.contains('@') {
-            return Err(AppError::Register {
+            return Err(AppError::Auth {
                 message: "Email is not valid".to_string(),
                 status: StatusCode::BAD_REQUEST,
             });
         }
 
         if register.password.len() < 6 {
-            return Err(AppError::Register {
+            return Err(AppError::Auth {
                 message: "Password must be at least 6 characters long".to_string(),
                 status: StatusCode::BAD_REQUEST,
             });
@@ -85,7 +85,7 @@ impl AuthService for AuthServiceImpl {
         let account = match user_service.get_by_username(&login.username).await {
             Ok(account) => account,
             Err(_) => {
-                return Err(AppError::Login {
+                return Err(AppError::Auth {
                     message: "Invalid username or password".to_string(),
                     status: StatusCode::BAD_REQUEST,
                 });
@@ -95,7 +95,7 @@ impl AuthService for AuthServiceImpl {
         match verify_password(&login.password, &account.password) {
             Ok(_) => {} // Do nothing
             Err(_) => {
-                return Err(AppError::Login {
+                return Err(AppError::Auth {
                     message: "Invalid username or password".to_string(),
                     status: StatusCode::BAD_REQUEST,
                 });

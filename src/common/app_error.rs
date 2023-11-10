@@ -23,10 +23,7 @@ pub enum AppError {
     InternalServer,
 
     #[error("{message:}")]
-    Register { message: String, status: StatusCode },
-
-    #[error("{message:}")]
-    Login { message: String, status: StatusCode },
+    Auth { message: String, status: StatusCode },
 
     #[error("{message:}")]
     User { message: String, status: StatusCode },
@@ -48,8 +45,7 @@ impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let status = match self {
             AppError::InternalServer { .. } => StatusCode::INTERNAL_SERVER_ERROR,
-            AppError::Register { status, .. } => status,
-            AppError::Login { status, .. } => status,
+            AppError::Auth { status, .. } => status,
             AppError::Token { status, .. } => status,
             AppError::PrintFile { status, .. } => status,
             AppError::Validation { status, .. } => status,
@@ -71,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_app_error_message() {
-        let err = AppError::Register {
+        let err = AppError::Auth {
             message: "test".to_string(),
             status: StatusCode::BAD_REQUEST,
         };
@@ -80,7 +76,7 @@ mod tests {
 
     #[test]
     fn test_app_error_into_response() {
-        let err = AppError::Register {
+        let err = AppError::Auth {
             message: "test".to_string(),
             status: StatusCode::BAD_REQUEST,
         };
