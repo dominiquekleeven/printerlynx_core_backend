@@ -11,12 +11,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Account::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Account::Uuid)
-                            .string()
-                            .not_null()
-                            .primary_key(),
-                    )
+                    .col(ColumnDef::new(Account::Uuid).string().not_null().primary_key())
                     .col(ColumnDef::new(Account::Username).string().not_null())
                     .col(ColumnDef::new(Account::Email).string().not_null())
                     .col(ColumnDef::new(Account::Password).string().not_null())

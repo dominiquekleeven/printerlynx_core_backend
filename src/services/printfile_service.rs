@@ -12,8 +12,8 @@ use tracing::{error, info};
 use uuid::Uuid;
 
 use crate::common::app_error::AppError;
+use crate::infra::filestorage::{retrieve_file, store_file};
 use crate::models::printfile_model::{FileType, PrintFile, PrintFileDbModel};
-use crate::services::filestorage_service::{retrieve_file, store_file};
 
 #[async_trait]
 pub trait PrintFileService {
@@ -177,8 +177,7 @@ impl PrintFileService for PrintFileServiceImpl {
     }
 }
 
-//TODO: add checksum duplicate check specific to user
-//TODO: add file name check specific to user (ask for overwrite)
+//TODO: ask for overwrite
 async fn insert_printfile(
     pool: Arc<Pool<MySql>>,
     user_uuid: &str,

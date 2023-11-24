@@ -7,7 +7,7 @@ use tokio::io::AsyncWriteExt;
 use tracing::{error, info};
 
 use crate::common::app_error::AppError;
-use crate::services::strategies::file_storage_strategy::FileStorageStrategy;
+use crate::infra::strategies::file_storage_strategy::FileStorageStrategy;
 
 pub struct LocalFileStrategy {}
 
