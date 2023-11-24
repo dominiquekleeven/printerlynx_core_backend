@@ -10,7 +10,7 @@ use uuid::Uuid;
 use crate::common::app_error::AppError;
 use crate::common::jwt_token::{generate_token, Claims, JwtToken};
 use crate::models::account_model::{AccountDbModel, AccountLoginModel, AccountRegisterModel};
-use crate::services::user_service::{UserService, UserServiceImpl};
+use crate::services::account_service::{AccountService, AccountServiceImpl};
 
 #[async_trait]
 pub trait AuthService {
@@ -60,7 +60,7 @@ impl AuthService for AuthServiceImpl {
             });
         }
 
-        let user_service = UserServiceImpl::new(self.pool.clone());
+        let account_service = AccountServiceImpl::new(self.pool.clone());
 
         let uuid = Uuid::new_v4().to_string();
         let account = AccountDbModel {
@@ -72,7 +72,7 @@ impl AuthService for AuthServiceImpl {
             updated_at: Utc::now().timestamp().to_string(),
         };
 
-        user_service.insert(&account).await?;
+        account_service.insert(&account).await?;
 
         let token = generate_token(create_claims(&account.uuid));
         Ok(JwtToken { token })
@@ -80,9 +80,9 @@ impl AuthService for AuthServiceImpl {
 
     /// Login a user and return a JWT token
     async fn login(&self, login: AccountLoginModel) -> Result<JwtToken, AppError> {
-        let user_service = UserServiceImpl::new(self.pool.clone());
+        let account_service = AccountServiceImpl::new(self.pool.clone());
 
-        let account = match user_service.get_by_username(&login.username).await {
+        let account = match account_service.get_by_username(&login.username).await {
             Ok(account) => account,
             Err(_) => {
                 return Err(AppError::Auth {
@@ -93,7 +93,7 @@ impl AuthService for AuthServiceImpl {
         };
 
         match verify_password(&login.password, &account.password) {
-            Ok(_) => {} // Do nothing
+            Ok(_) => {}
             Err(_) => {
                 return Err(AppError::Auth {
                     message: "Invalid username or password".to_string(),

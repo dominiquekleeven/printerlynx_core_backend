@@ -34,6 +34,9 @@ pub enum AppError {
     #[error("{message:}")]
     PrintFile { message: String, status: StatusCode },
 
+    #[error("{message:}")]
+    Agent { message: String, status: StatusCode },
+
     #[error("{messages:}")]
     Validation {
         messages: String,
@@ -48,6 +51,7 @@ impl IntoResponse for AppError {
             AppError::Auth { status, .. } => status,
             AppError::Token { status, .. } => status,
             AppError::PrintFile { status, .. } => status,
+            AppError::Agent { status, .. } => status,
             AppError::Validation { status, .. } => status,
             AppError::User { status, .. } => status,
         };

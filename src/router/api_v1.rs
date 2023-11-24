@@ -9,7 +9,7 @@ use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace;
 use tracing::Level;
 
-use crate::controllers::user_controller;
+use crate::controllers::account_controller;
 use crate::controllers::{auth_controller, printfile_controller};
 
 pub async fn create(state: Arc<AppState>) -> Router {
@@ -23,13 +23,13 @@ pub async fn create(state: Arc<AppState>) -> Router {
         .on_response(trace::DefaultOnResponse::new().level(Level::INFO));
 
     let auth_endpoints = auth_controller::init();
-    let user_endpoints = user_controller::init();
+    let account_endpoints = account_controller::init();
     let printfile_endpoints = printfile_controller::init();
 
     Router::new()
         .route("/health", get(|| async { "OK" }))
         .nest("/api/v1", auth_endpoints)
-        .nest("/api/v1", user_endpoints)
+        .nest("/api/v1", account_endpoints)
         .nest("/api/v1", printfile_endpoints)
         .layer(cors)
         .layer(trace_layer)

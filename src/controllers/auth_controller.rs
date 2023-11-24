@@ -19,7 +19,6 @@ pub fn init() -> Router<Arc<AppState>> {
         .route("/auth/register", post(register))
 }
 
-/// /api/v1/auth/register
 pub async fn register(
     State(state): State<Arc<AppState>>,
     Json(json): Json<AccountRegisterModel>,
@@ -32,7 +31,6 @@ pub async fn register(
     }
 }
 
-/// /api/v1/auth/login
 pub async fn login(
     State(state): State<Arc<AppState>>,
     Json(json): Json<AccountLoginModel>,

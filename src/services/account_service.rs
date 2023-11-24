@@ -10,24 +10,24 @@ use crate::common::app_error::AppError;
 use crate::models::account_model::{Account, AccountDbModel};
 
 #[async_trait]
-pub trait UserService {
+pub trait AccountService {
     async fn get_by_uuid(&self, uuid: &str) -> Result<AccountDbModel, AppError>;
     async fn insert(&self, account: &AccountDbModel) -> Result<bool, AppError>;
     async fn get_by_username(&self, username: &str) -> Result<AccountDbModel, AppError>;
 }
 
-pub struct UserServiceImpl {
+pub struct AccountServiceImpl {
     pool: Arc<Pool<MySql>>,
 }
 
-impl UserServiceImpl {
+impl AccountServiceImpl {
     pub fn new(pool: Arc<Pool<MySql>>) -> Self {
-        UserServiceImpl { pool }
+        AccountServiceImpl { pool }
     }
 }
 
 #[async_trait]
-impl UserService for UserServiceImpl {
+impl AccountService for AccountServiceImpl {
     /// Retrieves the user info based on their uuid
     async fn get_by_uuid(&self, uuid: &str) -> Result<AccountDbModel, AppError> {
         let sql = Query::select()
@@ -132,6 +132,7 @@ impl UserService for UserServiceImpl {
         Ok(account)
     }
 }
+
 async fn is_username_unique(pool: Arc<Pool<MySql>>, username: &str) -> Result<bool, AppError> {
     let sql = Query::select()
         .columns([Account::Uuid])

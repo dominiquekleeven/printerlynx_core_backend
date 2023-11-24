@@ -1,5 +1,5 @@
 use crate::common::app_error::AppError;
-use crate::services::strategies::file_storage_strategy::FileStorageStrategy;
+use crate::infra::strategies::file_storage_strategy::FileStorageStrategy;
 use axum::async_trait;
 use s3::creds::Credentials;
 use s3::{Bucket, Region};
