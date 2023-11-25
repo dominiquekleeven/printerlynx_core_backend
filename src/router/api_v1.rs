@@ -9,7 +9,7 @@ use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace;
 use tracing::Level;
 
-use crate::controllers::account_controller;
+use crate::controllers::{account_controller, agent_controller};
 use crate::controllers::{auth_controller, printfile_controller};
 
 pub async fn create(state: Arc<AppState>) -> Router {
@@ -25,12 +25,14 @@ pub async fn create(state: Arc<AppState>) -> Router {
     let auth_endpoints = auth_controller::init();
     let account_endpoints = account_controller::init();
     let printfile_endpoints = printfile_controller::init();
+    let agent_endpoints = agent_controller::init();
 
     Router::new()
         .route("/health", get(|| async { "OK" }))
         .nest("/api/v1", auth_endpoints)
         .nest("/api/v1", account_endpoints)
         .nest("/api/v1", printfile_endpoints)
+        .nest("/api/v1", agent_endpoints)
         .layer(cors)
         .layer(trace_layer)
         .with_state(state)
