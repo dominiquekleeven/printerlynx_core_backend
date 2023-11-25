@@ -26,6 +26,12 @@ pub struct AgentServiceImpl {
     pool: Arc<Pool<MySql>>,
 }
 
+impl AgentServiceImpl {
+    pub fn new(pool: Arc<Pool<MySql>>) -> Self {
+        AgentServiceImpl { pool }
+    }
+}
+
 #[async_trait]
 impl AgentService for AgentServiceImpl {
     async fn create(
