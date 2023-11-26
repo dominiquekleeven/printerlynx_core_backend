@@ -75,15 +75,22 @@ impl AgentService for AgentServiceImpl {
     async fn delete(&self, user_uuid: &str, agent_uuid: &str) -> Result<bool, AppError> {
         let sql = Query::delete()
             .from_table(Agent::Table)
-            .and_where(Expr::col(Agent::Uuid).eq(agent_uuid))
             .and_where(Expr::col(Agent::UserUuid).eq(user_uuid))
-            .to_string(MysqlQueryBuilder)
-            .to_owned();
+            .and_where(Expr::col(Agent::Uuid).eq(agent_uuid))
+            .to_string(MysqlQueryBuilder);
 
         let mut conn = self.pool.acquire().await.unwrap();
 
         match conn.execute(&*sql).await {
-            Ok(_) => Ok(true),
+            Ok(res) => {
+                if (res.rows_affected() as i32) > 0 {
+                    return Ok(true);
+                }
+                Err(AppError::Agent {
+                    message: "Agent not found".to_string(),
+                    status: StatusCode::NOT_FOUND,
+                })
+            }
             Err(e) => {
                 error!("Error deleting agent: {}", e);
                 Err(AppError::InternalServer)
