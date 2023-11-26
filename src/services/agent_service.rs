@@ -9,15 +9,11 @@ use tracing::error;
 use uuid::Uuid;
 
 use crate::common::app_error::AppError;
-use crate::models::agent_model::{Agent, AgentCreateRequest, AgentDbModel};
+use crate::models::agent_model::{Agent, AgentAddRequest, AgentDbModel};
 
 #[async_trait]
 pub trait AgentService {
-    async fn create(
-        &self,
-        user_uuid: &str,
-        agent: AgentCreateRequest,
-    ) -> Result<AgentDbModel, AppError>;
+    async fn add(&self, user_uuid: &str, agent: AgentAddRequest) -> Result<AgentDbModel, AppError>;
     async fn delete(&self, user_uuid: &str, file_uuid: &str) -> Result<bool, AppError>;
     async fn get_all(&self, user_uuid: &str) -> Result<Vec<AgentDbModel>, AppError>;
 }
@@ -34,11 +30,7 @@ impl AgentServiceImpl {
 
 #[async_trait]
 impl AgentService for AgentServiceImpl {
-    async fn create(
-        &self,
-        user_uuid: &str,
-        agent: AgentCreateRequest,
-    ) -> Result<AgentDbModel, AppError> {
+    async fn add(&self, user_uuid: &str, agent: AgentAddRequest) -> Result<AgentDbModel, AppError> {
         let agent_model = AgentDbModel {
             uuid: Uuid::new_v4().to_string(),
             user_uuid: user_uuid.to_string(),

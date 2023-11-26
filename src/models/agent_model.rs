@@ -24,7 +24,7 @@ pub struct AgentDbModel {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct AgentCreateRequest {
+pub struct AgentAddRequest {
     pub name: String,
     pub description: String,
 }
@@ -32,7 +32,6 @@ pub struct AgentCreateRequest {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AgentViewModel {
     pub uuid: String,
-    pub user_uuid: String,
     pub name: String,
     pub description: String,
     pub token: String,
@@ -45,7 +44,6 @@ impl ViewModel for AgentDbModel {
     fn to_viewmodel(&self) -> Self::Model {
         AgentViewModel {
             uuid: self.uuid.to_string(),
-            user_uuid: self.user_uuid.to_string(),
             name: self.name.to_string(),
             description: self.description.to_string(),
             token: self.token.to_string(),
