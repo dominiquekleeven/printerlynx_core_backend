@@ -35,7 +35,6 @@ pub struct PrintFileDbModel {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PrintFileViewModel {
     pub uuid: String,
-    pub user_uuid: String,
     pub name: String,
     pub size: i32,
     pub checksum: String,
@@ -77,7 +76,6 @@ impl ViewModel for PrintFileDbModel {
     fn to_viewmodel(&self) -> Self::Model {
         PrintFileViewModel {
             uuid: self.uuid.to_string(),
-            user_uuid: self.user_uuid.to_string(),
             name: self.name.to_string(),
             size: self.size.to_owned(),
             checksum: self.checksum.to_string(),

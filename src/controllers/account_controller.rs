@@ -16,7 +16,7 @@ use crate::AppState;
 pub fn init() -> Router<Arc<AppState>> {
     info!("Ok");
     Router::new()
-        .route("/accounts/info", get(info))
+        .route("/accounts/me", get(info))
         .route_layer(middleware::from_fn(auth_middleware::handle))
 }
 
