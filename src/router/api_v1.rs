@@ -11,6 +11,7 @@ use tracing::Level;
 
 use crate::controllers::{account_controller, agent_controller};
 use crate::controllers::{auth_controller, printfile_controller};
+use crate::infra::websockets;
 
 pub async fn create(state: Arc<AppState>) -> Router {
     let cors = CorsLayer::new()
@@ -36,4 +37,5 @@ pub async fn create(state: Arc<AppState>) -> Router {
         .layer(cors)
         .layer(trace_layer)
         .with_state(state)
+        .route("/ws", get(websockets::handler))
 }

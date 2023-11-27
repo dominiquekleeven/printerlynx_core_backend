@@ -52,7 +52,7 @@ pub async fn start() {
         addr.port()
     );
     axum::Server::bind(&addr)
-        .serve(app.into_make_service())
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
         .await
         .expect("Failed to start Axum server")
 }
