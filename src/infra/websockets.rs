@@ -12,9 +12,10 @@ use uuid::Uuid;
 
 #[derive(Debug)]
 #[allow(dead_code)]
-struct WebSocketSession {
+pub struct WebSocketSession {
     pub uuid: String,
     pub addr: SocketAddr,
+    pub authenticated: bool,
     pub sender: SplitSink<WebSocket, Message>,
 }
 
@@ -23,6 +24,7 @@ struct WebSocketSession {
 struct WebSocketSessionInfo {
     pub uuid: String,
     pub addr: SocketAddr,
+    pub authenticated: bool,
 }
 
 pub async fn handler(
@@ -45,6 +47,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
         uuid: Uuid::new_v4().to_string(),
         addr,
         sender,
+        authenticated: false,
     };
     info!("Created session: {:?}", session);
 
@@ -52,6 +55,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
     let session_info = WebSocketSessionInfo {
         uuid: session.uuid.clone(),
         addr: session.addr,
+        authenticated: session.authenticated,
     };
     let session_json = serde_json::to_string(&session_info).expect("Failed to serialize session");
 

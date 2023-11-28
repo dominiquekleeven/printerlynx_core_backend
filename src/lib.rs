@@ -4,9 +4,11 @@ use std::sync::Arc;
 
 use dotenvy::dotenv;
 use sqlx::{MySql, Pool};
+use tokio::sync::Mutex;
 use tracing::info;
 
 use crate::infra::database;
+use crate::infra::websockets::WebSocketSession;
 
 mod common;
 mod controllers;
@@ -20,6 +22,12 @@ mod services;
 #[derive(Clone)]
 pub struct AppState {
     pub pool: Arc<Pool<MySql>>,
+}
+
+#[allow(dead_code)]
+#[derive(Clone)]
+pub struct AppWebSocketState {
+    pub sessions: Arc<Mutex<Vec<WebSocketSession>>>,
 }
 
 /// Starts the Printerlynx Backend server
