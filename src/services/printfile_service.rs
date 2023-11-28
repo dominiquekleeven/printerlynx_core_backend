@@ -13,7 +13,7 @@ use uuid::Uuid;
 
 use crate::common::app_error::AppError;
 use crate::infra::filestorage::{retrieve_file, store_file};
-use crate::models::printfile_model::{FileType, PrintFile, PrintFileDbModel};
+use crate::models::printfile::{FileType, PrintFile, PrintFileDbModel};
 
 #[async_trait]
 pub trait PrintFileService {

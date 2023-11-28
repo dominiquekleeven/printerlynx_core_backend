@@ -8,7 +8,7 @@ use tracing::info;
 
 use crate::common::app_error::AppError;
 use crate::middlewares::auth_middleware;
-use crate::models::printfile_model::PrintFileViewModel;
+use crate::models::printfile::PrintFileViewModel;
 use crate::models::view_model::ViewModel;
 use crate::services::printfile_service::{PrintFileService, PrintFileServiceImpl};
 use crate::AppState;

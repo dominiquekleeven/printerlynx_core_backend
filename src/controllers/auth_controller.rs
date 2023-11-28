@@ -8,7 +8,7 @@ use tracing::info;
 
 use crate::common::app_error::AppError;
 use crate::common::jwt_token::JwtToken;
-use crate::models::account_model::{AccountLoginModel, AccountRegisterModel};
+use crate::models::account::{AccountLoginModel, AccountRegisterModel};
 use crate::services::auth_service::{AuthService, AuthServiceImpl};
 
 /// Initializes the auth controller, defining the routes and middlewares

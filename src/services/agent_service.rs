@@ -9,7 +9,7 @@ use tracing::error;
 use uuid::Uuid;
 
 use crate::common::app_error::AppError;
-use crate::models::agent_model::{Agent, AgentAddRequest, AgentDbModel};
+use crate::models::agent::agent::{Agent, AgentAddRequest, AgentDbModel};
 
 #[async_trait]
 pub trait AgentService {

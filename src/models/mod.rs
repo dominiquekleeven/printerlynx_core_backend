@@ -1,9 +1,12 @@
-pub mod account_model;
+pub mod account;
 
-pub mod printfile_model;
+pub mod printfile;
 
-pub mod agent_model;
-
-pub mod printer_model;
+pub mod printer;
 
 pub mod view_model;
+
+pub mod agent {
+    pub mod agent;
+    pub mod agent_service;
+}

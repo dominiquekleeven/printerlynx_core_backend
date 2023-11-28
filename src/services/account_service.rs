@@ -7,7 +7,7 @@ use sqlx::{Executor, FromRow, MySql, Pool};
 use tracing::error;
 
 use crate::common::app_error::AppError;
-use crate::models::account_model::{Account, AccountDbModel};
+use crate::models::account::{Account, AccountDbModel};
 
 #[async_trait]
 pub trait AccountService {

@@ -22,12 +22,7 @@ mod services;
 #[derive(Clone)]
 pub struct AppState {
     pub pool: Arc<Pool<MySql>>,
-}
-
-#[allow(dead_code)]
-#[derive(Clone)]
-pub struct AppWebSocketState {
-    pub sessions: Arc<Mutex<Vec<WebSocketSession>>>,
+    pub websocket_sessions: Arc<Mutex<Vec<WebSocketSession>>>,
 }
 
 /// Starts the Printerlynx Backend server
@@ -46,6 +41,7 @@ pub async fn start() {
     let pool = database::get_pool().await;
     let state = Arc::new(AppState {
         pool: Arc::new(pool),
+        websocket_sessions: Arc::new(Mutex::new(Vec::new())),
     });
 
     let app = router::api_v1::create(state).await;
