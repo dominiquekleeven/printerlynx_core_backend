@@ -16,6 +16,7 @@ pub struct WebSocketSession {
     pub uuid: String,
     pub addr: SocketAddr,
     pub authenticated: bool,
+    pub user_uuid: String,
     pub sender: SplitSink<WebSocket, Message>,
 }
 
@@ -24,6 +25,9 @@ pub struct WebSocketSession {
 struct WebSocketSessionInfo {
     pub uuid: String,
     pub addr: SocketAddr,
+
+    //TODO: Remove user_uuid and authenticated from session info
+    pub user_uuid: String,
     pub authenticated: bool,
 }
 
@@ -47,6 +51,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
         uuid: Uuid::new_v4().to_string(),
         addr,
         sender,
+        user_uuid: "".to_string(),
         authenticated: false,
     };
     info!("Created session: {:?}", session);
@@ -55,6 +60,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
     let session_info = WebSocketSessionInfo {
         uuid: session.uuid.clone(),
         addr: session.addr,
+        user_uuid: session.user_uuid.clone(),
         authenticated: session.authenticated,
     };
     let session_json = serde_json::to_string(&session_info).expect("Failed to serialize session");
