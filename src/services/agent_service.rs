@@ -9,7 +9,7 @@ use tracing::error;
 use uuid::Uuid;
 
 use crate::common::app_error::AppError;
-use crate::models::agent::agent::{Agent, AgentAddRequest, AgentDbModel};
+use crate::models::agent::{Agent, AgentAddRequest, AgentDbModel};
 
 #[async_trait]
 pub trait AgentService {
@@ -66,7 +66,7 @@ impl AgentService for AgentServiceImpl {
         match conn.execute(&*sql).await {
             Ok(_) => Ok(agent_model),
             Err(e) => {
-                error!("Error creating agent: {}", e);
+                error!("Error creating agents: {}", e);
                 Err(AppError::InternalServer)
             }
         }
@@ -92,7 +92,7 @@ impl AgentService for AgentServiceImpl {
                 })
             }
             Err(e) => {
-                error!("Error deleting agent: {}", e);
+                error!("Error deleting agents: {}", e);
                 Err(AppError::InternalServer)
             }
         }

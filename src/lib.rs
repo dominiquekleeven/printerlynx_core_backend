@@ -8,7 +8,7 @@ use tokio::sync::Mutex;
 use tracing::info;
 
 use crate::infra::database;
-use crate::infra::websockets::WebSocketSession;
+use crate::infra::websockets::user_websocket::UserWebSocketSession;
 
 mod common;
 mod controllers;
@@ -22,7 +22,7 @@ mod services;
 #[derive(Clone)]
 pub struct AppState {
     pub pool: Arc<Pool<MySql>>,
-    pub websocket_sessions: Arc<Mutex<Vec<WebSocketSession>>>,
+    pub user_websocket_sessions: Arc<Mutex<Vec<UserWebSocketSession>>>,
 }
 
 /// Starts the Printerlynx Backend server
@@ -41,7 +41,7 @@ pub async fn start() {
     let pool = database::get_pool().await;
     let state = Arc::new(AppState {
         pool: Arc::new(pool),
-        websocket_sessions: Arc::new(Mutex::new(Vec::new())),
+        user_websocket_sessions: Arc::new(Mutex::new(Vec::new())),
     });
 
     let app = router::api_v1::create(state).await;

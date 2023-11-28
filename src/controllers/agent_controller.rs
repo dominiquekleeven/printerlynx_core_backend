@@ -1,6 +1,6 @@
 use crate::common::app_error::AppError;
 use crate::middlewares::auth_middleware;
-use crate::models::agent::agent::{AgentAddRequest, AgentViewModel};
+use crate::models::agent::{AgentAddRequest, AgentViewModel};
 use crate::models::view_model::ViewModel;
 use crate::services::agent_service::{AgentService, AgentServiceImpl};
 use crate::AppState;

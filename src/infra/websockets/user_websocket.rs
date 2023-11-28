@@ -11,7 +11,7 @@ use tracing::info;
 use uuid::Uuid;
 
 #[derive(Debug)]
-pub struct WebSocketSession {
+pub struct UserWebSocketSession {
     pub uuid: String,
     pub addr: SocketAddr,
     pub authenticated: bool,
@@ -20,7 +20,7 @@ pub struct WebSocketSession {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct WebSocketSessionInfo {
+struct UserWebSocketSessionInfo {
     pub uuid: String,
     pub addr: SocketAddr,
     //TODO: Remove user_uuid and authenticated from session info
@@ -44,7 +44,7 @@ pub async fn handler(
 
 async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
     let (sender, mut receiver) = socket.split();
-    let mut session = WebSocketSession {
+    let mut session = UserWebSocketSession {
         uuid: Uuid::new_v4().to_string(),
         addr,
         sender,
@@ -54,7 +54,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
     info!("Created session: {:?}", session);
 
     // convert session to json
-    let session_info = WebSocketSessionInfo {
+    let session_info = UserWebSocketSessionInfo {
         uuid: session.uuid.clone(),
         addr: session.addr,
         user_uuid: session.user_uuid.clone(),

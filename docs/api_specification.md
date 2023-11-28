@@ -185,7 +185,7 @@ Add a new print agent.
 Request
 {
     "name": "Demo",
-    "description": "This is a demo agent"
+    "description": "This is a demo agents"
 }
 ```
 
@@ -194,7 +194,7 @@ Response
 {
     "uuid": "54588f93-80df-4daf-ab8c-ad92a1333139",
     "name": "Demo",
-    "description": "This is a demo agent",
+    "description": "This is a demo agents",
     "token": "854d8e05-b423-48a5-a8ec-5d4c24489439",
     "created_at": "1701035283"
 }
@@ -208,7 +208,7 @@ Response
     {
         "uuid": "54588f93-80df-4daf-ab8c-ad92a1333139",
         "name": "Demo",
-        "description": "This is a demo agent",
+        "description": "This is a demo agents",
         "token": "854d8e05-b423-48a5-a8ec-5d4c24489439",
         "created_at": "1701035283"
     }
@@ -222,7 +222,7 @@ Response
 {
     "uuid": "54588f93-80df-4daf-ab8c-ad92a1333139",
     "name": "Demo",
-    "description": "This is a demo agent",
+    "description": "This is a demo agents",
     "token": "854d8e05-b423-48a5-a8ec-5d4c24489439",
     "created_at": "1701035283"
 }
@@ -234,7 +234,7 @@ Changes an existing agent
 Request
 {
     "name": "Demo1",
-    "description": "This is a demo1 agent"
+    "description": "This is a demo1 agents"
 }
 ```
 ```js
@@ -242,7 +242,7 @@ Response
 {
     "uuid": "54588f93-80df-4daf-ab8c-ad92a1333139",
     "name": "Demo1",
-    "description": "This is a demo1 agent",
+    "description": "This is a demo1 agents",
     "token": "854d8e05-b423-48a5-a8ec-5d4c24489439",
     "created_at": "1701035283"
 }
