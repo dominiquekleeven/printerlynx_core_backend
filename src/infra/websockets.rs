@@ -1,21 +1,28 @@
 use std::net::SocketAddr;
 
-use axum::{headers, TypedHeader};
-use axum::extract::{ConnectInfo, WebSocketUpgrade};
 use axum::extract::ws::{Message, WebSocket};
+use axum::extract::{ConnectInfo, WebSocketUpgrade};
 use axum::response::IntoResponse;
-use futures_util::{
-    SinkExt,
-    stream::StreamExt,
-};
+use axum::{headers, TypedHeader};
+use futures_util::stream::SplitSink;
+use futures_util::{stream::StreamExt, SinkExt};
+use serde::{Deserialize, Serialize};
 use tracing::info;
 use uuid::Uuid;
 
 #[derive(Debug)]
 #[allow(dead_code)]
 struct WebSocketSession {
-    uuid: String,
-    addr: SocketAddr,
+    pub uuid: String,
+    pub addr: SocketAddr,
+    pub sender: SplitSink<WebSocket, Message>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[allow(dead_code)]
+struct WebSocketSessionInfo {
+    pub uuid: String,
+    pub addr: SocketAddr,
 }
 
 pub async fn handler(
@@ -33,27 +40,40 @@ pub async fn handler(
 }
 
 async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
-    let (mut sender, mut receiver) = socket.split();
-    let session = WebSocketSession {
+    let (sender, mut receiver) = socket.split();
+    let mut session = WebSocketSession {
         uuid: Uuid::new_v4().to_string(),
         addr,
+        sender,
     };
     info!("Created session: {:?}", session);
 
-    while let Some(message) = receiver.next().await {
-        info!("Received message: {:?} from {:?}", message, addr);
+    // convert session to json
+    let session_info = WebSocketSessionInfo {
+        uuid: session.uuid.clone(),
+        addr: session.addr,
+    };
+    let session_json = serde_json::to_string(&session_info).expect("Failed to serialize session");
 
-        let response = "Pong";
-        match sender.send(Message::from(response)).await {
-            Ok(_) => info!("Sent message: {:?} to {:?}", response, addr),
-            Err(e) => {
-                info!("Error sending message: {:?} to {:?}: {:?}", response, addr, e);
-                break;
+    // send session info to client
+    let _ = session.sender.send(Message::from(session_json)).await;
+
+    tokio::spawn(async move {
+        while let Some(message) = &receiver.next().await {
+            info!("Received message: {:?} from {:?}", message, addr);
+
+            let response = "Pong";
+            match session.sender.send(Message::from(response)).await {
+                Ok(_) => info!("Sent message: {:?} to {:?}", response, addr),
+                Err(e) => {
+                    info!(
+                        "Error sending message: {:?} to {:?}: {:?}",
+                        response, addr, e
+                    );
+                    break;
+                }
             }
         }
-    }
-    info!("Connection closed with {:?}", addr);
+        info!("Connection closed with {:?}", addr);
+    });
 }
-
-
-
