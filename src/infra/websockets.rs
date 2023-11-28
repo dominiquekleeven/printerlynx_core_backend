@@ -11,7 +11,6 @@ use tracing::info;
 use uuid::Uuid;
 
 #[derive(Debug)]
-#[allow(dead_code)]
 pub struct WebSocketSession {
     pub uuid: String,
     pub addr: SocketAddr,
@@ -21,11 +20,9 @@ pub struct WebSocketSession {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[allow(dead_code)]
 struct WebSocketSessionInfo {
     pub uuid: String,
     pub addr: SocketAddr,
-
     //TODO: Remove user_uuid and authenticated from session info
     pub user_uuid: String,
     pub authenticated: bool,
