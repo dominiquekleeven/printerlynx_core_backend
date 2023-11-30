@@ -29,7 +29,7 @@ async fn get_all(
     State(state): State<Arc<AppState>>,
     Extension(user_uuid): Extension<String>,
 ) -> Result<Json<Vec<PrintFileViewModel>>, AppError> {
-    let printfile_service = PrintFileServiceImpl::new(state.pool.clone());
+    let printfile_service = PrintFileServiceImpl::new(state.db_pool.clone());
 
     let printfiles = printfile_service.get_all(&user_uuid).await?;
 
@@ -46,7 +46,7 @@ async fn get_by_uuid(
     Extension(user_uuid): Extension<String>,
     Path(uuid): Path<String>,
 ) -> Result<Json<PrintFileViewModel>, AppError> {
-    let printfile_service = PrintFileServiceImpl::new(state.pool.clone());
+    let printfile_service = PrintFileServiceImpl::new(state.db_pool.clone());
 
     let printfile = printfile_service.get_by_uuid(&user_uuid, &uuid).await?;
     let printfile = printfile.to_viewmodel();
@@ -59,7 +59,7 @@ async fn upload(
     Extension(user_uuid): Extension<String>,
     multipart: Multipart,
 ) -> Result<Json<PrintFileViewModel>, AppError> {
-    let printfile_service = PrintFileServiceImpl::new(state.pool.clone());
+    let printfile_service = PrintFileServiceImpl::new(state.db_pool.clone());
     let printfile = printfile_service.upload(&user_uuid, multipart).await?;
     let printfile = printfile.to_viewmodel();
 
@@ -71,7 +71,7 @@ async fn download(
     Extension(user_uuid): Extension<String>,
     Path(uuid): Path<String>,
 ) -> Result<Vec<u8>, AppError> {
-    let printfile_service = PrintFileServiceImpl::new(state.pool.clone());
+    let printfile_service = PrintFileServiceImpl::new(state.db_pool.clone());
     let printfile = printfile_service.download(&user_uuid, &uuid).await?;
 
     Ok(printfile)
@@ -82,7 +82,7 @@ async fn delete_by_uuid(
     Extension(user_uuid): Extension<String>,
     Path(uuid): Path<String>,
 ) -> Result<Json<bool>, AppError> {
-    let printfile_service = PrintFileServiceImpl::new(state.pool.clone());
+    let printfile_service = PrintFileServiceImpl::new(state.db_pool.clone());
     let deleted = printfile_service.delete(&user_uuid, &uuid).await?;
 
     Ok(Json(deleted))

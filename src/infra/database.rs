@@ -27,7 +27,7 @@ pub async fn get_pool() -> MySqlPool {
             pool
         }
         Err(e) => {
-            info!("Error connecting to database: {}", e);
+            error!("Error connecting to database: {}", e);
             panic!("Error connecting to database");
         }
     }

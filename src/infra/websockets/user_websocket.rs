@@ -1,85 +1,53 @@
 use std::net::SocketAddr;
+use std::sync::Arc;
 
 use axum::extract::ws::{Message, WebSocket};
 use axum::extract::{ConnectInfo, WebSocketUpgrade};
 use axum::response::IntoResponse;
-use axum::{headers, TypedHeader};
-use futures_util::stream::SplitSink;
 use futures_util::{stream::StreamExt, SinkExt};
 use serde::{Deserialize, Serialize};
 use tracing::info;
-use uuid::Uuid;
-
-#[derive(Debug)]
-pub struct UserWebSocketSession {
-    pub uuid: String,
-    pub addr: SocketAddr,
-    pub authenticated: bool,
-    pub user_uuid: String,
-    pub sender: SplitSink<WebSocket, Message>,
-}
 
 #[derive(Serialize, Deserialize, Debug)]
-struct UserWebSocketSessionInfo {
-    pub uuid: String,
-    pub addr: SocketAddr,
-    //TODO: Remove user_uuid and authenticated from session info
+struct UserWebSocketSession {
     pub user_uuid: String,
     pub authenticated: bool,
+}
+
+struct WebSocketState {
+    pub user_web_socket_session: Arc<UserWebSocketSession>,
 }
 
 pub async fn handler(
     ws: WebSocketUpgrade,
-    user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
 ) -> impl IntoResponse {
-    let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
-        user_agent.to_string()
-    } else {
-        String::from("Unknown")
-    };
-    info!("{user_agent} at {addr} connected.");
+    info!("User at {addr} connected.");
     ws.on_upgrade(move |socket| handle_socket(socket, addr))
 }
 
 async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
-    let (sender, mut receiver) = socket.split();
-    let mut session = UserWebSocketSession {
-        uuid: Uuid::new_v4().to_string(),
-        addr,
-        sender,
-        user_uuid: "".to_string(),
+    let (mut sender, mut receiver) = socket.split();
+    let session = UserWebSocketSession {
         authenticated: false,
+        user_uuid: "".to_string(),
     };
-    info!("Created session: {:?}", session);
 
-    // convert session to json
-    let session_info = UserWebSocketSessionInfo {
-        uuid: session.uuid.clone(),
-        addr: session.addr,
-        user_uuid: session.user_uuid.clone(),
-        authenticated: session.authenticated,
-    };
-    let session_json = serde_json::to_string(&session_info).expect("Failed to serialize session");
+    let ws_state = Arc::new(WebSocketState {
+        user_web_socket_session: Arc::new(session),
+    });
+
+    info!("Created session: {:?}", ws_state.user_web_socket_session);
+    let session_json = serde_json::to_string(&ws_state.user_web_socket_session)
+        .expect("Failed to serialize session");
 
     // send session info to client
-    let _ = session.sender.send(Message::from(session_json)).await;
+    let _ = sender.send(Message::from(session_json)).await;
 
+    // spawn receiver task
     tokio::spawn(async move {
         while let Some(message) = &receiver.next().await {
             info!("Received message: {:?} from {:?}", message, addr);
-
-            let response = "Pong";
-            match session.sender.send(Message::from(response)).await {
-                Ok(_) => info!("Sent message: {:?} to {:?}", response, addr),
-                Err(e) => {
-                    info!(
-                        "Error sending message: {:?} to {:?}: {:?}",
-                        response, addr, e
-                    );
-                    break;
-                }
-            }
         }
         info!("Connection closed with {:?}", addr);
     });

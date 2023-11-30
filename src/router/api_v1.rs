@@ -1,14 +1,14 @@
 use std::sync::Arc;
 
-use crate::AppState;
 use axum::http::header::{AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
 use axum::http::Method;
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace;
 use tracing::Level;
 
+use crate::AppState;
 use crate::controllers::{account_controller, agent_controller};
 use crate::controllers::{auth_controller, printfile_controller};
 use crate::infra::websockets::{agent_websocket, user_websocket};
@@ -36,7 +36,7 @@ pub async fn create(state: Arc<AppState>) -> Router {
         .nest("/api/v1", agent_endpoints)
         .layer(cors)
         .layer(trace_layer)
-        .with_state(state)
         .route("/ws", get(user_websocket::handler))
         .route("/agents/ws", get(agent_websocket::handler))
+        .with_state(state)
 }

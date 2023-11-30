@@ -1,7 +1,7 @@
 pub mod database;
 pub mod filestorage;
+pub mod message_broker;
 pub mod strategies;
-mod message_broker;
 
 pub mod messages {
     pub mod broker_message;
@@ -9,6 +9,6 @@ pub mod messages {
 }
 
 pub mod websockets {
-    pub mod user_websocket;
     pub mod agent_websocket;
+    pub mod user_websocket;
 }

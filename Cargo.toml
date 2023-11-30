@@ -28,3 +28,4 @@ tracing-subscriber = {version = "0.3.17", features = ["env-filter", "default"]}
 uuid = { version = "1.4.1", features = ["serde", "v4"] }
 futures-util = "0.3.28"
 serde_json = "1.0.105"
+lapin = { version = "2.3.1"}

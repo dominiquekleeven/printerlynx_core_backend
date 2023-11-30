@@ -24,7 +24,7 @@ pub async fn info(
     State(state): State<Arc<AppState>>,
     Extension(user_uuid): Extension<String>,
 ) -> Result<Json<AccountViewModel>, AppError> {
-    let account_service = AccountServiceImpl::new(state.pool.clone());
+    let account_service = AccountServiceImpl::new(state.db_pool.clone());
 
     let account = match account_service.get_by_uuid(&user_uuid).await {
         Ok(account) => account,

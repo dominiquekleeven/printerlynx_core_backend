@@ -1,14 +1,9 @@
-use std::net::SocketAddr;
-
-use axum::{headers, TypedHeader};
+use axum::extract::ws::WebSocket;
 use axum::extract::{ConnectInfo, WebSocketUpgrade};
-use axum::extract::ws::{Message, WebSocket};
 use axum::response::IntoResponse;
-use futures_util::{SinkExt, stream::StreamExt};
-use futures_util::stream::SplitSink;
-use serde::{Deserialize, Serialize};
+use futures_util::stream::StreamExt;
+use std::net::SocketAddr;
 use tracing::info;
-use uuid::Uuid;
 
 pub async fn handler(
     ws: WebSocketUpgrade,
@@ -20,7 +15,6 @@ pub async fn handler(
 
 async fn handle_socket(socket: WebSocket, addr: SocketAddr) {
     let (_sender, mut receiver) = socket.split();
-
 
     tokio::spawn(async move {
         while let Some(message) = &receiver.next().await {

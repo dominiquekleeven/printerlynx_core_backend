@@ -24,7 +24,7 @@ async fn add(
     Extension(user_uuid): Extension<String>,
     Json(json): Json<AgentAddRequest>,
 ) -> Result<Json<AgentViewModel>, AppError> {
-    let agent_service = AgentServiceImpl::new(state.pool.clone());
+    let agent_service = AgentServiceImpl::new(state.db_pool.clone());
 
     let agent = match agent_service.add(&user_uuid, json).await {
         Ok(agent) => agent,
@@ -39,7 +39,7 @@ async fn get_all(
     State(state): State<Arc<AppState>>,
     Extension(user_uuid): Extension<String>,
 ) -> Result<Json<Vec<AgentViewModel>>, AppError> {
-    let agent_service = AgentServiceImpl::new(state.pool.clone());
+    let agent_service = AgentServiceImpl::new(state.db_pool.clone());
 
     let agents = agent_service.get_all(&user_uuid).await?;
 
@@ -56,7 +56,7 @@ async fn delete_by_uuid(
     Extension(user_uuid): Extension<String>,
     Path(uuid): Path<String>,
 ) -> Result<Json<bool>, AppError> {
-    let agent_service = AgentServiceImpl::new(state.pool.clone());
+    let agent_service = AgentServiceImpl::new(state.db_pool.clone());
     agent_service.delete(&user_uuid, &uuid).await?;
 
     Ok(Json(true))
