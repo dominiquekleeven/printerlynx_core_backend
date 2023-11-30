@@ -3,7 +3,7 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use dotenvy::dotenv;
-use lapin::{Channel};
+use lapin::Channel;
 use sqlx::{MySql, Pool};
 use tracing::info;
 
