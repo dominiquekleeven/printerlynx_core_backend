@@ -1,13 +1,15 @@
 use std::env;
+use std::sync::Arc;
 
 use lapin::{Channel, Connection, ConnectionProperties};
-use tracing::info;
+use tracing::{error, info};
+use crate::common::app_error::AppError;
 
-pub async fn get_channel() -> Channel {
+pub async fn get_connection() -> Connection {
     let addr = env::var("AMQP_URL").expect("AMQP_URL must be set!");
     info!("Connecting to message broker...");
 
-    let conn = match Connection::connect(&addr, ConnectionProperties::default()).await {
+    match Connection::connect(&addr, ConnectionProperties::default()).await {
         Ok(conn) => {
             info!("Connected to message broker");
             conn
@@ -15,11 +17,6 @@ pub async fn get_channel() -> Channel {
         Err(e) => {
             panic!("Error connecting to message broker: {}", e);
         }
-    };
-    match conn.create_channel().await {
-        Ok(channel) => channel,
-        Err(e) => {
-            panic!("Error creating channel: {}", e);
-        }
     }
 }
+

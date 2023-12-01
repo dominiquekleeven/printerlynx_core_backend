@@ -1,5 +1,5 @@
 use std::net::SocketAddr;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use axum::Error;
 use axum::extract::{ConnectInfo, State, WebSocketUpgrade};
@@ -22,7 +22,7 @@ pub struct UserWebSocketSession {
 }
 
 struct WebSocketState {
-    pub user_web_socket_session: Arc<UserWebSocketSession>,
+    pub user_web_socket_session: Arc<Mutex<UserWebSocketSession>>,
 }
 
 pub async fn handler(
@@ -34,7 +34,7 @@ pub async fn handler(
     ws.on_upgrade(move |socket| handle_socket(socket, addr, State(state)))
 }
 
-async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(state): State<Arc<AppState>>) {
+async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(_state): State<Arc<AppState>>) {
     let (mut sender, mut receiver) = socket.split();
 
     let session = UserWebSocketSession {
@@ -43,7 +43,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(state): State<
     };
 
     let ws_state = Arc::new(WebSocketState {
-        user_web_socket_session: Arc::new(session),
+        user_web_socket_session: Arc::new(Mutex::new(session)),
     });
 
     info!("Created session: {:?}", ws_state.user_web_socket_session);
@@ -68,7 +68,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(state): State<
             };
 
             // check if message is authentication
-            if message.message_type == WebSocketMessageType::Authentication {
+            if message.message_type == WebSocketMessageType::UserAuthentication {
                 handle_auth_message(message).expect("TODO: panic message");
             }
         }
@@ -100,10 +100,10 @@ fn parse_message(message: &Result<Message, Error>) -> Result<WebSocketMessage, A
 
 
 fn handle_auth_message(message: WebSocketMessage) -> Result<(), AppError> {
-    let token = message.token;
+    let token = message.body;
 
     // check if token is valid
-    let token = match decode_token(&token) {
+    let _token = match decode_token(&token) {
         Ok(token) => token,
         Err(_) => {
             warn!("Invalid token");
