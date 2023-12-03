@@ -73,6 +73,7 @@ The **print_job** message is used to send print jobs to the backend. The print j
 {
     "type": "print_job",
     "data": {
+        "type": "START", // START, PAUSE, RESUME, CANCEL
         "agent_uuid": "7d4ce00f-d60a-4504-96ab-31a83f848722",
         "print_file_uuid": "7d4ce00f-d60a-4504-96ab-31a83f848722",
         "printer_uuid": "7d4ce00f-d60a-4504-96ab-31a83f848722"
@@ -154,7 +155,7 @@ The **agent_status** message is used to let the front-end client know the status
     "data": {
         "agent_name": "Demo",
         "agent_uuid": "7d4ce00f-d60a-4504-96ab-31a83f848722",
-        "status": "online"
+        "status": "online" // online, offline
     }
 }
 ```
@@ -165,7 +166,7 @@ The **agent_status** message is used to let the front-end client know the status
     "data": {
         "agent_identifier": "Demo",
         "agent_uuid": "7d4ce00f-d60a-4504-96ab-31a83f848722",
-        "status": "offline"
+        "status": "offline" // online, offline
     }
 }
 ```
@@ -189,8 +190,8 @@ The **agent_status** message is used to let the front-end client know the status
         "printer_identifier": "Demo",
         "printer_adapter_identifier": "SERIAL",
         "printer_adapter_interface": "/dev/ttyUSB0",
-        "status": "available",
-        "job": null
+        "status": "available", // available, unavailable, busy
+        "job": null // null or object
         "state": {
             "temperature": {
                 "bed": 0,
@@ -229,8 +230,8 @@ The **agent_status** message is used to let the front-end client know the status
         "job": {
             "print_file_uuid": "7d4ce00f-d60a-4504-96ab-31a83f848722",
             "name": "File.gcode",
-            "size": 4106612, 
-            "progress": 0.5, 
+            "size": 4106612, // bytes
+            "progress": 0.5, // 0.0 - 1.0
         },
         "state": {
             "temperature": {
