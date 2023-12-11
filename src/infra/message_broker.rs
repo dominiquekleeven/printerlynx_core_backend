@@ -1,9 +1,6 @@
 use std::env;
-use std::sync::Arc;
-
-use lapin::{Channel, Connection, ConnectionProperties};
-use tracing::{error, info};
-use crate::common::app_error::AppError;
+use lapin::{Connection, ConnectionProperties};
+use tracing::{info};
 
 pub async fn get_connection() -> Connection {
     let addr = env::var("AMQP_URL").expect("AMQP_URL must be set!");

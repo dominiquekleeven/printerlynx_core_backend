@@ -30,7 +30,6 @@ async fn get_all(
     Extension(user_uuid): Extension<String>,
 ) -> Result<Json<Vec<PrintFileViewModel>>, AppError> {
     let printfile_service = PrintFileServiceImpl::new(state.db_pool.clone());
-
     let printfiles = printfile_service.get_all(&user_uuid).await?;
 
     let files = printfiles
