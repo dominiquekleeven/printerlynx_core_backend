@@ -90,7 +90,7 @@ fn parse_message(message: &Result<Message, Error>) -> Result<WebSocketMessage, A
     };
 
     // try to deserialize message
-    let message: WebSocketMessage = match serde_json::from_str(&message) {
+    let message: WebSocketMessage = match serde_json::from_str(message) {
         Ok(message) => message,
         Err(_) => return Err(AppError::InternalServer),
     };

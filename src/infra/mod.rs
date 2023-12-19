@@ -8,7 +8,3 @@ pub mod messages {
     pub mod websocket_message;
 }
 
-pub mod websockets {
-    pub mod agent_websocket;
-    pub mod user_websocket;
-}
