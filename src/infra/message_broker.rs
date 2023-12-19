@@ -1,6 +1,6 @@
-use std::env;
 use lapin::{Connection, ConnectionProperties};
-use tracing::{info};
+use std::env;
+use tracing::info;
 
 pub async fn get_connection() -> Connection {
     let addr = env::var("AMQP_URL").expect("AMQP_URL must be set!");
@@ -16,4 +16,3 @@ pub async fn get_connection() -> Connection {
         }
     }
 }
-

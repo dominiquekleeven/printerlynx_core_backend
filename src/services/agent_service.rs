@@ -31,6 +31,20 @@ impl AgentServiceImpl {
 #[async_trait]
 impl AgentService for AgentServiceImpl {
     async fn add(&self, user_uuid: &str, agent: AgentAddRequest) -> Result<AgentDbModel, AppError> {
+        if agent.name.is_empty() {
+            return Err(AppError::Agent {
+                message: "Agent name cannot be empty".to_string(),
+                status: StatusCode::BAD_REQUEST,
+            });
+        }
+
+        if agent.name.len() < 3 {
+            return Err(AppError::Agent {
+                message: "Agent name must be at least 3 characters long".to_string(),
+                status: StatusCode::BAD_REQUEST,
+            });
+        }
+
         let agent_model = AgentDbModel {
             uuid: Uuid::new_v4().to_string(),
             user_uuid: user_uuid.to_string(),

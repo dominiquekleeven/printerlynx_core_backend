@@ -3,7 +3,7 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use dotenvy::dotenv;
-use lapin::{Connection};
+use lapin::Connection;
 use sqlx::{MySql, Pool};
 use tracing::info;
 
@@ -41,11 +41,9 @@ pub async fn start() {
         amqp_connection: Arc::new(amqp_connection),
     });
 
-
     // create the core que
     // let ch1 = state.amqp_connection.create_channel().await.unwrap();
     // ch1.queue_declare("test", QueueDeclareOptions::default(), Default::default()).await.expect("TODO: panic message");
-
 
     // init router and output addr information
     let app = router::api_v1::create(state).await;
@@ -77,4 +75,3 @@ pub fn output_system_info() {
         operating_system, architecture, family
     );
 }
-

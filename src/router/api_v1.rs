@@ -8,9 +8,9 @@ use tower_http::cors::{Any, CorsLayer};
 use tower_http::trace;
 use tracing::Level;
 
+use crate::controllers::websockets::{agent_websocket, user_websocket};
 use crate::controllers::{account_controller, agent_controller};
 use crate::controllers::{auth_controller, printfile_controller};
-use crate::controllers::websockets::{agent_websocket, user_websocket};
 use crate::AppState;
 
 pub async fn create(state: Arc<AppState>) -> Router {

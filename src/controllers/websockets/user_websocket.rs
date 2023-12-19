@@ -1,19 +1,19 @@
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
-use axum::Error;
-use axum::extract::{ConnectInfo, State, WebSocketUpgrade};
 use axum::extract::ws::{Message, WebSocket};
+use axum::extract::{ConnectInfo, State, WebSocketUpgrade};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use futures_util::{SinkExt, stream::StreamExt};
+use axum::Error;
+use futures_util::{stream::StreamExt, SinkExt};
 use serde::{Deserialize, Serialize};
 use tracing::{info, warn};
 
-use crate::AppState;
 use crate::common::app_error::AppError;
 use crate::common::jwt_token::decode_token;
 use crate::infra::messages::websocket_message::{WebSocketMessage, WebSocketMessageType};
+use crate::AppState;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserWebSocketSession {
@@ -76,7 +76,6 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(_state): State
     });
 }
 
-
 fn parse_message(message: &Result<Message, Error>) -> Result<WebSocketMessage, AppError> {
     // check if is valid
     let message = match message {
@@ -97,7 +96,6 @@ fn parse_message(message: &Result<Message, Error>) -> Result<WebSocketMessage, A
 
     Ok(message)
 }
-
 
 fn handle_auth_message(message: WebSocketMessage) -> Result<(), AppError> {
     let token = message.body;
