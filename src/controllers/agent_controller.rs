@@ -25,11 +25,7 @@ async fn add(
     Json(json): Json<AgentAddRequest>,
 ) -> Result<Json<AgentViewModel>, AppError> {
     let agent_service = AgentServiceImpl::new(state.db_pool.clone());
-
-    let agent = match agent_service.add(&user_uuid, json).await {
-        Ok(agent) => agent,
-        Err(err) => return Err(err),
-    };
+    let agent = agent_service.add(&user_uuid, json).await?;
 
     let viewmodel = agent.to_viewmodel();
     Ok(Json(viewmodel))
@@ -40,7 +36,6 @@ async fn get_all(
     Extension(user_uuid): Extension<String>,
 ) -> Result<Json<Vec<AgentViewModel>>, AppError> {
     let agent_service = AgentServiceImpl::new(state.db_pool.clone());
-
     let agents = agent_service.get_all(&user_uuid).await?;
 
     let agents = agents
