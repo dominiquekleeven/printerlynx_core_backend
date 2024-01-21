@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   workflow_run:
-    workflows: ["name-of-your-main-workflow"]
+    workflows: ["Test & Build"]
     types:
       - completed
 
