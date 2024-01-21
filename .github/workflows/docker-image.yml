@@ -1,0 +1,16 @@
+name: Docker Image CI
+
+on:
+  workflow_run:
+    workflows: ["name-of-your-main-workflow"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag printerlynx_core_backend:$(date +%s)
