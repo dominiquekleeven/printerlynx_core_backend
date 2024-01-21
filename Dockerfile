@@ -7,7 +7,7 @@ WORKDIR /app
 RUN cargo init
 
 COPY ./src /app/src
-COPY Cargo.toml Cargo.lock /app/
+COPY Cargo.toml /app/
 
 RUN cargo build --release
 
