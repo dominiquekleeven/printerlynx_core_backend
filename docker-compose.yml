@@ -12,15 +12,6 @@ services:
       MYSQL_ROOT_PASSWORD: PrinterlynxDev
     volumes:
       - mysql-data:/var/lib/mysql
-  rabbitmq: # RABBITMQ
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    restart: always
-    environment:
-      RABBITMQ_DEFAULT_USER: printerlynx
-      RABBITMQ_DEFAULT_PASS: PrinterlynxDev
   minio: # MINIO
     image: minio/minio
     ports:
@@ -36,5 +27,4 @@ services:
 
 volumes:
     mysql-data:
-    redis-data:
     minio-data:

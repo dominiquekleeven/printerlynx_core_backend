@@ -1,20 +1,20 @@
 use std::net::SocketAddr;
 use std::sync::Arc;
 
-use axum::Error;
-use axum::extract::{ConnectInfo, State, WebSocketUpgrade};
 use axum::extract::ws::{Message, WebSocket};
+use axum::extract::{ConnectInfo, State, WebSocketUpgrade};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use futures_util::{SinkExt, stream::StreamExt};
+use axum::Error;
+use futures_util::{stream::StreamExt, SinkExt};
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 use tracing::{info, warn};
 
-use crate::AppState;
 use crate::common::app_error::AppError;
 use crate::common::jwt_token::decode_token;
 use crate::controllers::websockets::websocket_message::{WebSocketMessage, WebSocketMessageType};
+use crate::AppState;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserSession {
@@ -26,7 +26,6 @@ pub struct UserSession {
 pub struct UserWebSocketSession {
     pub user: UserSession,
 }
-
 
 pub async fn handler(
     ws: WebSocketUpgrade,
@@ -44,7 +43,7 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(_state): State
         user: UserSession {
             uuid: "".to_string(),
             authenticated: false,
-        }
+        },
     }));
 
     info!("Created session: {:?}", session);
@@ -84,7 +83,9 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(_state): State
                             message_type: WebSocketMessageType::Error,
                             body: err.to_string(),
                         };
-                        let _ = sender.send(Message::from(serde_json::to_string(&message).unwrap())).await;
+                        let _ = sender
+                            .send(Message::from(serde_json::to_string(&message).unwrap()))
+                            .await;
                         continue;
                     }
                 }
@@ -96,12 +97,11 @@ async fn handle_socket(socket: WebSocket, addr: SocketAddr, State(_state): State
                     message_type: WebSocketMessageType::Error,
                     body: "Session not authenticated".to_string(),
                 };
-                let _ = sender.send(Message::from(serde_json::to_string(&message).unwrap())).await;
+                let _ = sender
+                    .send(Message::from(serde_json::to_string(&message).unwrap()))
+                    .await;
                 continue;
             }
-
-
-
         }
         info!("Connection closed with {:?}", addr);
     });
@@ -128,12 +128,14 @@ fn parse_message(message: &Result<Message, Error>) -> Result<WebSocketMessage, A
     Ok(message)
 }
 
-async fn handle_auth_message(message: WebSocketMessage, session: &Arc<Mutex<UserWebSocketSession>>) -> Result<(), AppError> {
+async fn handle_auth_message(
+    message: WebSocketMessage,
+    session: &Arc<Mutex<UserWebSocketSession>>,
+) -> Result<(), AppError> {
     let token = message.body;
     let mut session = session.lock().await;
 
-    if session.user.authenticated
-    {
+    if session.user.authenticated {
         return Ok(());
     }
 
@@ -142,7 +144,7 @@ async fn handle_auth_message(message: WebSocketMessage, session: &Arc<Mutex<User
         Ok(jwt) => {
             session.user.authenticated = true;
             session.user.uuid = jwt.claims.sub;
-        },
+        }
         Err(_) => {
             warn!("Invalid token");
             return Err(AppError::Token {
@@ -151,7 +153,6 @@ async fn handle_auth_message(message: WebSocketMessage, session: &Arc<Mutex<User
             });
         }
     };
-
 
     Ok(())
 }

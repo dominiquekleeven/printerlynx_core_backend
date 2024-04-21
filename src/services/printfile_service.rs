@@ -42,6 +42,18 @@ impl PrintFileServiceImpl {
     }
 }
 
+const PRINTFILE_SELECT_COLUMNS: [PrintFile; 9] = [
+    PrintFile::Uuid,
+    PrintFile::UserUuid,
+    PrintFile::Name,
+    PrintFile::Path,
+    PrintFile::Size,
+    PrintFile::Checksum,
+    PrintFile::FileType,
+    PrintFile::FileStorageType,
+    PrintFile::CreatedAt,
+];
+
 #[async_trait]
 impl PrintFileService for PrintFileServiceImpl {
     async fn upload(
@@ -99,17 +111,7 @@ impl PrintFileService for PrintFileServiceImpl {
 
     async fn get_all(&self, user_uuid: &str) -> Result<Vec<PrintFileDbModel>, AppError> {
         let sql = Query::select()
-            .columns([
-                PrintFile::Uuid,
-                PrintFile::UserUuid,
-                PrintFile::Name,
-                PrintFile::Path,
-                PrintFile::Size,
-                PrintFile::Checksum,
-                PrintFile::FileType,
-                PrintFile::FileStorageType,
-                PrintFile::CreatedAt,
-            ])
+            .columns(PRINTFILE_SELECT_COLUMNS)
             .from(PrintFile::Table)
             .and_where(Expr::col(PrintFile::UserUuid).eq(user_uuid))
             .to_string(MysqlQueryBuilder);
@@ -139,17 +141,7 @@ impl PrintFileService for PrintFileServiceImpl {
         file_uuid: &str,
     ) -> Result<PrintFileDbModel, AppError> {
         let sql = Query::select()
-            .columns([
-                PrintFile::Uuid,
-                PrintFile::UserUuid,
-                PrintFile::Name,
-                PrintFile::Path,
-                PrintFile::Size,
-                PrintFile::Checksum,
-                PrintFile::FileType,
-                PrintFile::FileStorageType,
-                PrintFile::CreatedAt,
-            ])
+            .columns(PRINTFILE_SELECT_COLUMNS)
             .from(PrintFile::Table)
             .and_where(Expr::col(PrintFile::UserUuid).eq(user_uuid))
             .and_where(Expr::col(PrintFile::Uuid).eq(file_uuid))
